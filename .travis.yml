@@ -1,0 +1,27 @@
+sudo: required
+
+language: python
+
+services:
+  - docker
+
+env:
+  global:
+    - DOCKER_REPO="laslabs/docker-quality-tools-test"
+    - DOCKER_USER="laslabsbot"
+    - DOCKER_TAG="latest"
+    - BRANCH_PROD=$TRAVIS_BRANCH
+    - secure: "PrlB5VIJlovOMgFt3oVT/7vAH/AGoerlNltsvaWpmYm/ffDNfRvWt7fViWur5nYCm/47HB+DqLU7dRprFWj4diF3WlFNrbAUZAfCrVDS/JbEHM17NNq/whsiuKQchbVZfSWbJgZmKWbdZ4OhhivdQlNCOOAHixqnC4XqK5e3IvGQ61xqPGzA9/0ITkxf2P/62GfZvJpHrzujvQzRx4n6z8RYPemvuLNP3KdvacqTgnoUQ203cEYe/OrAnS5XXMvsQcLoozwJVwRPEWGI+JhUNxJzZxtC2f2qYeaiPevnFr+opNPegkm1JFa2JWtYeUscgqurd7ny0t4IZjqMq9eEukgb/XBH+LSR0OHrJETBPAq2Lb5gnwN1S92JgvT7hyR6OoKoPQACuDN+1NYl5HvucdOI6FQDlmFb5pFESTEobii8rPrRgtJaEBz0/9oGUdCmOiVJw7sefxX0x3IYUPu16caWb7jL8hh8AGkIPuXwxJCr7YBvbw2TEp+xFa+gi6OBq6Q2QK+VEGtsJwIamO7qDA2uYT5I+1l9nAoI9wk6DS67KwL3kOMrr/SZWwV6cdmA+ranjO3Y2qexkBf15mX9uXP4PyW8wXbK1pTX9ghfhUZLKXkR6v5OS8fnRAyv8EJwMHBgRxaMo6RQc3xw7FYB8mmNOB50Hljg4UlWae74GVs="
+  matrix:
+    - TESTS="1" TEST_REPO="test_working_repo"
+    - TESTS="1" TEST_REPO="test_broken_repo" BROKEN="1"
+    - LINT_CHECK="1" TEST_REPO="test_working_repo"
+    - LINT_CHECK="1" TEST_REPO="test_broken_repo" BROKEN="1"
+    - HUB="1" TEST_REPO="test_working_repo"
+
+install:
+  - export PATH=${TRAVIS_BUILD_DIR}/travis:${PATH}
+  - export PATH=${TRAVIS_BUILD_DIR}/tests:${PATH}
+
+script:
+  - test_all "$TRAVIS_BUILD_DIR/tests/$TEST_REPO"

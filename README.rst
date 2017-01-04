@@ -1,14 +1,15 @@
-|License LGPL-3|
+|License MIT| |Build Status|
 
 ====================
-Python Quality Tools
+Docker Quality Tools
 ====================
 
-This repo provides scripts primarily focused at peforming the following actions
-in a Continuous Integration server:
+This repo provides scripts primarily focused at performing the following actions
+in a Continuous Integration server for Docker repos:
 
 * Testing
-* Building & Deploying Documentation
+* Linting
+* Deploying to Dockerhub
 
 Usage
 =====
@@ -16,12 +17,18 @@ Usage
 This repo is meant to be called by a Continuous Integration server. A sample Travis
 file is included at ``sample_files/.travis.yml``.
 
+The test runner will automatically run any files matching the path ``./tests/test_*``.
+
+The environment variable ``DOCKER_CONTAINER_ID`` will be available to all tests, as well
+as all other environment variables that are available in other parts of the build.
+
 Known Issues / Road Map
 =======================
 
 -  Enhance ReadMe
--  Add tests
--  Try to centralize ``setup.py``, or add a sample one
+-  Add tests for Lint and Docker Hub
+-  Centralize and refactor
+-  Add some more test helpers
 
 Credits
 =======
@@ -38,6 +45,11 @@ Maintainer
    :alt: LasLabs Inc.
    :target: https://laslabs.com
 
-.. |License LGPL-3| image:: https://img.shields.io/badge/license-LGPL--3-blue.svg
-   :target: http://www.gnu.org/licenses/lgpl.html
-   :alt: License: LGPL-3
+This module is maintained by `LasLabs Inc. <https://laslabs.com>`_.
+
+.. |License MIT| image:: https://img.shields.io/badge/license-MIT-blue.svg
+   :target: https://opensource.org/licenses/MIT
+   :alt: License: MIT
+.. |Build Status| image:: https://api.travis-ci.org/LasLabs/docker-quality-tools.svg?branch=master
+   :target: https://travis-ci.org/LasLabs/docker-quality-tools
+   :alt: Build Status

@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+#
+# Copyright 2016 LasLabs Inc.
+# License MIT or later (https://opensource.org/licenses/MIT).
+
+import os
+import subprocess
+
+build_dir = os.environ.get('TRAVIS_BUILD_DIR', './')
+dockerfile = os.environ.get('DOCKERFILE', 'Dockerfile')
+lint_ignore = os.environ.get('LINT_IGNORE', [])
+
+if lint_ignore:
+    lint_ignore = lint_ignore.split(',')
+
+dockerfile_path = os.path.abspath('%s/%s' % (build_dir, dockerfile))
+
+cmd = ['docker', 'run', '--rm', '-i', 'lukasmartinelli/hadolint',
+       'hadolint']
+
+for ignore in lint_ignore:
+    cmd.extend(('--ignore', ignore))
+
+cmd.extend(['-', '<', '"%s"' % dockerfile_path])
+
+process = subprocess.Popen(
+  ' '.join(cmd), shell=True, stdout=subprocess.PIPE, env=os.environ.copy(),
+)
+
+while True:
+    output = process.stdout.readline()
+    if output == '' and process.poll() is not None:
+        break
+    if output:
+        print output.strip()
+    process.poll()
+
+exit(process.returncode)

@@ -1,0 +1,108 @@
+#!/usr/bin/env python
+# Copyright 2016 LasLabs Inc.
+# License MIT or later (https://opensource.org/licenses/MIT).
+
+import logging
+import os
+import subprocess
+import sys
+
+
+build_dir = os.environ.get('TRAVIS_BUILD_DIR', '.')
+
+
+def read_process(process):
+    collected = []
+    while True:
+        output = process.stdout.readline()
+        if output == '' and process.poll() is not None:
+            break
+        if output:
+            collected.append(output.strip())
+            logging.debug(collected[-1])
+        process.poll()
+    return '\n'.join(collected)
+
+
+def do_test(build_dir, env=None, add_env=None):
+
+    logging.info('Testing %s', build_dir)
+    if not env:
+        env = os.environ.copy()
+    env.update({
+        'TRAVIS_BUILD_DIR': build_dir,
+        'DAEMONIZE': '1',
+    })
+    if add_env:
+        env.update(add_env)
+
+    # Install Step
+    process = subprocess.Popen(
+        'travis_install_all',
+        shell=True,
+        stdout=subprocess.PIPE,
+        env=env,
+    )
+    read_process(process)
+
+    # Test Step
+    process = subprocess.Popen(
+        'travis_run_all',
+        shell=True,
+        stdout=subprocess.PIPE,
+        env=env,
+    )
+
+    try:
+        results = read_process(process)
+        fail = process.returncode
+    except (subprocess.CalledProcessError,
+            ValueError,
+            OSError):
+        logging.exception('%s encountered an error.', build_dir)
+        fail = True
+
+    if fail:
+        logging.error('Failures encountered during testing, exiting.')
+        logging.error('Results of command were:\n%s' % results)
+        exit(fail)
+    else:
+        logging.info('Test passed for %s', build_dir)
+
+    # After Success Step
+    process = subprocess.Popen(
+        'travis_after_success_all',
+        shell=True,
+        stdout=subprocess.PIPE,
+        env=env,
+    )
+    read_process(process)
+
+
+if __name__ == '__main__':
+    """ Run tests specified by the command args. """
+
+    logging.basicConfig(format='%(levelname)s: %(message)s',
+                        level=logging.DEBUG)
+    logging.info('Start self test cycle')
+
+    fail = False
+
+    for test_dir in sys.argv[1:]:
+        env = os.environ.copy()
+        broken = env.get('BROKEN') or '_broken_' in test_dir
+        path = os.path.abspath(os.path.join(build_dir, test_dir))
+        env.update({
+            'BROKEN': str(int(broken)),
+        })
+        try:
+            do_test(path, env)
+            if broken:
+                logging.error('Test passed, but should have failed')
+                fail = True
+        except SystemExit:
+            if not broken:
+                logging.error('Test failed')
+                fail = True
+
+    exit(int(fail))
