@@ -1,19 +1,18 @@
 FROM golang:alpine
 MAINTAINER LasLabs Inc <support@laslabs.com>
 
-# Install Build Dependencies & Application
-ENV BUILD_DEPS="build-base \
-                python-dev"
-
 # Make sure to use --no-cache.
-RUN apk add --no-cache "$BUILD_DEPS" \
-                       python
+RUN apk add --no-cache --virtual .build-deps \
+    build-base \
+    python-dev
+
+RUN apk add --no-cache python
 
 # Do stuff involving the build dependencies
-RUN echo "$BUILD_DEPS"
+RUN echo "Stuff"
 
 # Remove build dependencies
-RUN apk del "$BUILD_DEPS"
+RUN apk del .build-deps
 
 # Copy and define entrypoint
 COPY ./docker-entrypoint.sh /
