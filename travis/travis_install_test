@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+# Copyright 2016 LasLabs Inc.
+# License MIT or later (https://opensource.org/licenses/MIT).
+
+set -e
+
+# Build Docker Image
+travis_build_image

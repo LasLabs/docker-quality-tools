@@ -1,0 +1,20 @@
+#!/usr/bin/env python
+# Copyright 2016 LasLabs Inc.
+# License MIT or later (https://opensource.org/licenses/MIT).
+
+# This script will test that EXPECT is in the output from COMMAND
+
+import os
+import subprocess
+
+COMMAND="openssl"
+EXPECT="OpenSSL> "
+
+cmd = 'docker exec -i -t %s %s' % (
+    os.environ.get('DOCKER_CONTAINER_ID'),
+    COMMAND
+)
+
+result = subprocess.check_output(cmd, shell=True)
+
+assert EXPECT in result

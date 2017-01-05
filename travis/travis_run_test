@@ -1,0 +1,96 @@
+#!/usr/bin/env python
+#
+# Copyright 2016 LasLabs Inc.
+# License MIT or later (https://opensource.org/licenses/MIT).
+
+import logging
+import os
+import subprocess
+
+logging.basicConfig(format='%(levelname)s: %(message)s',
+                    level=logging.DEBUG)
+
+build_number = os.environ.get('TRAVIS_BUILD_NUMBER', '0')
+build_dir = os.environ.get('TRAVIS_BUILD_DIR', './')
+daemonize = os.environ.get('DAEMONIZE', '1')
+docker_repo = os.environ.get('DOCKER_REPO', 'laslabs/docker-test')
+docker_tag = os.environ.get('DOCKER_TAG', 'latest')
+ports = os.environ.get('PORTS', [])
+links = os.environ.get('LINKS', [])
+run_env = os.environ.get('RUN_ENV', [])
+run_args = os.environ.get('RUN_ARGS', [])
+
+def read_process(process):
+    collected = []
+    while True:
+        output = process.stdout.readline()
+        if output == '' and process.poll() is not None:
+            break
+        if output:
+            collected.append(output.strip())
+            logging.debug(collected[-1])
+        process.poll()
+    return '\n'.join(collected)
+
+if ports:
+    ports = ports.split(',')
+
+if run_env:
+    run_env = run_env.split(',')
+
+if links:
+    links = links.split(',')
+
+if run_args:
+    run_args = run_args.split(' ')
+
+build_dir_absolute = os.path.abspath(build_dir)
+test_dir = os.path.join(build_dir_absolute, 'tests')
+
+cmd = ['docker', 'run', '--name=%s-%s' % (docker_tag, build_number)]
+
+for port in ports:
+    cmd.extend(('-p', port))
+
+for link in links:
+    cmd.append('--link=%s' % link)
+
+for env in run_env:
+    cmd.extend(('-e', env))
+
+if daemonize == '1':
+    cmd.append('-d')
+
+cmd.extend(['-t', "%s:%s" % (docker_repo, docker_tag)] + run_args)
+env = os.environ.copy()
+
+logging.debug(cmd)
+
+process = subprocess.Popen(
+  cmd, stdout=subprocess.PIPE, env=env,
+)
+env['DOCKER_CONTAINER_ID'] = read_process(process).strip()
+
+fail = False
+
+logging.debug(subprocess.check_call(['docker', 'ps']))
+logging.debug('Container ID %s', env['DOCKER_CONTAINER_ID'])
+
+if os.path.isdir(test_dir):
+    logging.debug('Test dir %s', test_dir)
+    for (dir_path, dirs, files) in os.walk(test_dir):
+        for file_name in files:
+            logging.debug('File %s', file_name)
+            if file_name.startswith('test_'):
+                file_path = os.path.join(dir_path, file_name)
+                logging.info('Beginning test on %s' % file_path)
+                process = subprocess.Popen(
+                    file_path,
+                    stdout=subprocess.PIPE,
+                    env=env,
+                )
+                read_process(process)
+                if process.returncode != 0:
+                    fail = True
+
+exit(fail)

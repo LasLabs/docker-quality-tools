@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+# Copyright 2016 LasLabs Inc.
+# License MIT or later (https://opensource.org/licenses/MIT).
+
+# This script will test that $FILE_PATH exists on the server.
+
+set -e
+
+FILE_PATH='/docker-entrypoint.sh'
+
+OUTPUT=`docker exec -i -t $DOCKER_CONTAINER_ID ls -l $FILE_PATH`
+
+echo $OUTPUT | grep -q "$FILE_PATH"
+
+echo "Container $DOCKER_CONTAINER_ID has file $FILE_PATH"

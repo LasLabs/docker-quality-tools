@@ -1,0 +1,61 @@
+sudo: required
+
+language: python
+
+services:
+  - docker
+
+env:
+  global:
+    # These are for pushing to DockerHub
+    - DOCKER_REPO="laslabs/my-image"
+    - DOCKER_USER="laslabsbot"
+    - DOCKER_TAG="latest"
+    # Generate this per repo with the following:
+    #   travis encrypt '$DOCKER_PASS="$DOCKER_PASS"'-r LasLabs/repo-name
+    - secure: "$DOCKER_PASS_TOKEN"
+    # This is the branch where deploys happen
+    - BRANCH_PROD="master"
+    # Use this to change the Dockerfile location, relative to TRAVIS_BUILD_DIR
+    - DOCKERFILE="Dockerfile"
+    # This is a comma separated list of variables for build args, example:
+    #   PYTHON_VERSION=3,PYTHON_PACKAGE=python3
+    - BUILD_ARGS=""
+    # This is a comma separated list of port mappings, example:
+    #   80:80,443:443
+    - PORTS=""
+    # This is a comma separated list of link mappings, example:
+    #   postgres:db,nginx:proxy
+    - LINKS=""
+    # This indicates whether the image should be run as a daemon. "1" for Yes
+    #   or anything else for No.
+    - DAEMONIZE="1"
+    # This is a space separated list of arguments to add to the image when
+    #   issuing run.
+    - RUN_ARGS=""
+    # This is a comma separated list of environment variables to expose to the
+    #   docker container. Example:
+    #     ``POSTGRES_USER="psql",POSTGRES_PASS="SuperSecureBro"``
+    - RUN_ENV=""
+    # This is a comma separated list of lints to ignore
+    - LINT_IGNORE=""
+    # These could realistically all be excluded.
+    - TESTS="0"
+    - LINT_CHECK="0"
+    - HUB="0"
+
+  matrix:
+    - TESTS="1"
+    - LINT_CHECK="1"
+    - HUB="1"
+
+install:
+  - git clone --depth=1 https://github.com/LasLabs/docker-quality-tools.git ${HOME}/docker-quality-tools
+  - export PATH=${HOME}/docker-quality-tools/travis:${PATH}
+  - travis_install_all
+
+script:
+  - travis_run_all
+
+after_success:
+  - travis_after_success_all
