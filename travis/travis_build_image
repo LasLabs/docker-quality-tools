@@ -3,8 +3,15 @@
 # Copyright 2016 LasLabs Inc.
 # License MIT or later (https://opensource.org/licenses/MIT).
 
+import logging
 import os
 import subprocess
+
+import coloredlogs
+
+coloredlogs.install(level='DEBUG')
+logging.basicConfig(format='%(levelname)s: %(message)s',
+                    level=logging.DEBUG)
 
 build_dir = os.environ.get('TRAVIS_BUILD_DIR', os.path.dirname(__file__))
 docker_repo = os.environ.get('DOCKER_REPO', 'laslabs/docker-test')
@@ -31,7 +38,7 @@ while True:
     if output == '' and process.poll() is not None:
         break
     if output:
-        print output.strip()
+        logging.debug(output.strip())
     rc = process.poll()
 
 exit(process.returncode)

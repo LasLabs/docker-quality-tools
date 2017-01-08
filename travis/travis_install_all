@@ -7,6 +7,9 @@ set -e
 
 echo "Installing All Dependencies"
 
+# Colored Logs
+pip install coloredlogs
+
 # Fix Cert errors
 # pip install requests[security]
 
