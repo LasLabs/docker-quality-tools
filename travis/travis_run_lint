@@ -3,8 +3,13 @@
 # Copyright 2016 LasLabs Inc.
 # License MIT or later (https://opensource.org/licenses/MIT).
 
+import logging
 import os
 import subprocess
+
+import coloredlogs
+
+coloredlogs.install(level='DEBUG')
 
 build_dir = os.environ.get('TRAVIS_BUILD_DIR', './')
 dockerfile = os.environ.get('DOCKERFILE', 'Dockerfile')
@@ -32,7 +37,7 @@ while True:
     if output == '' and process.poll() is not None:
         break
     if output:
-        print output.strip()
+        logging.debug(output.strip())
     process.poll()
 
 exit(process.returncode)
