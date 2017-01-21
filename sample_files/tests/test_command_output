@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Copyright 2016 LasLabs Inc.
-# License MIT or later (https://opensource.org/licenses/MIT).
+# License Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.html).
 
 # This script will test that EXPECT is in the output from COMMAND
 

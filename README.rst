@@ -1,4 +1,4 @@
-|License MIT| |Build Status|
+|License Apache 2.0| |Build Status|
 
 ====================
 Docker Quality Tools
@@ -47,9 +47,9 @@ Maintainer
 
 This module is maintained by `LasLabs Inc. <https://laslabs.com>`_.
 
-.. |License MIT| image:: https://img.shields.io/badge/license-MIT-blue.svg
-   :target: https://opensource.org/licenses/MIT
-   :alt: License: MIT
+.. |License Apache 2.0| image:: https://img.shields.io/badge/license-Apache--2.0-blue.svg
+   :target: https://www.apache.org/licenses/LICENSE-2.0.html
+   :alt: License: Apache 2.0
 .. |Build Status| image:: https://api.travis-ci.org/LasLabs/docker-quality-tools.svg?branch=master
    :target: https://travis-ci.org/LasLabs/docker-quality-tools
    :alt: Build Status
