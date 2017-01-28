@@ -1,6 +1,6 @@
 #!/bin/sh
-# Copyright 2017 LasLabs Inc.
-# License MIT (https://opensource.org/licenses/MIT).
+# Copyright 2017-TODAY LasLabs Inc.
+# License Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.html).
 
 set -e
 
