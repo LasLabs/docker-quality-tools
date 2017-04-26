@@ -9,6 +9,8 @@ import subprocess
 
 import coloredlogs
 
+from datetime import datetime
+
 coloredlogs.install(level='DEBUG')
 logging.basicConfig(format='%(levelname)s: %(message)s',
                     level=logging.DEBUG)
@@ -21,6 +23,12 @@ if build_args:
     build_args = build_args.split(',')
 
 build_args = [arg.strip() for arg in build_args]
+
+build_args.extend([
+    'VCS_REF=%s' % os.environ.get('TRAVIS_COMMIT', 'No VCS'),
+    'BUILD_DATE=%s' % datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'),
+    'VERSION=%s' % docker_tag,
+])
 
 cmd = ['docker', 'build', '--tag=%s:%s' % (docker_repo, docker_tag)]
 
