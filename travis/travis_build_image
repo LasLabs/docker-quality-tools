@@ -19,6 +19,13 @@ build_dir = os.environ.get('TRAVIS_BUILD_DIR', os.path.dirname(__file__))
 docker_repo = os.environ.get('DOCKER_REPO', 'laslabs/docker-test')
 docker_tag = os.environ.get('DOCKER_TAG', 'latest')
 build_args = os.environ.get('BUILD_ARGS', [])
+docker_file = os.environ.get('DOCKERFILE', 'Dockerfile')
+
+docker_build_dir = os.environ.get('DOCKER_DIR', '')
+docker_build_dir = os.path.abspath(
+    os.path.join(build_dir, docker_build_dir),
+)
+
 if build_args:
     build_args = build_args.split(',')
 
@@ -30,12 +37,16 @@ build_args.extend([
     'VERSION=%s' % docker_tag,
 ])
 
-cmd = ['docker', 'build', '--tag=%s:%s' % (docker_repo, docker_tag)]
+cmd = [
+    'docker', 'build',
+    '--file=%s' % docker_file,
+    '--tag=%s:%s' % (docker_repo, docker_tag),
+]
 
 for arg in build_args:
     cmd.extend(('--build-arg', arg))
 
-cmd.append(build_dir)
+cmd.append(docker_build_dir)
 
 process = subprocess.Popen(
   cmd, stdout=subprocess.PIPE, env=os.environ.copy(),
