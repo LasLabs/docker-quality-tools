@@ -15,10 +15,17 @@ build_dir = os.environ.get('TRAVIS_BUILD_DIR', './')
 dockerfile = os.environ.get('DOCKERFILE', 'Dockerfile')
 lint_ignore = os.environ.get('LINT_IGNORE', [])
 
+docker_build_dir = os.environ.get('DOCKER_DIR', '')
+docker_build_dir = os.path.join(
+    build_dir, docker_build_dir,
+)
+
 if lint_ignore:
     lint_ignore = lint_ignore.split(',')
 
-dockerfile_path = os.path.abspath('%s/%s' % (build_dir, dockerfile))
+dockerfile_path = os.path.abspath(
+    os.path.join(docker_build_dir, dockerfile),
+)
 
 cmd = ['docker', 'run', '--rm', '-i', 'lukasmartinelli/hadolint',
        'hadolint']

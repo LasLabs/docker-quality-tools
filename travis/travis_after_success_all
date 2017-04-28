@@ -7,18 +7,19 @@ set -e
 
 echo "Running After Install"
 
-if [ "${LINT_CHECK}" = "1" ]; 
-then
+if [ "${LINT_CHECK}" = "1" ]; then
 
   . travis_after_success_lint
 
-elif [ "${TESTS}" = "1" ]; 
-then
+fi
+
+if [ "${TESTS}" = "1" ]; then
 
   . travis_after_success_test
 
-elif [ "${DOCS}" = "1" ]; 
-then
+fi
+
+if [ "${DOCS}" = "1" ]; then
 
   if [ "${TRAVIS_BRANCH}" = "${BRANCH_PROD:=master}" ] \
   && [ "${TRAVIS_PULL_REQUEST}" = "false" ];
@@ -28,8 +29,9 @@ then
 
   fi
 
-elif [ "${HUB}" = "1" ];
-then
+fi
+
+if [ "${HUB}" = "1" ]; then
 
   if [ "${TRAVIS_BRANCH}" = "${BRANCH_PROD:=master}" ] \
   && [ "${TRAVIS_PULL_REQUEST}" = "false" ];
