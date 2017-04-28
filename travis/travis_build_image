@@ -25,6 +25,7 @@ docker_build_dir = os.environ.get('DOCKER_DIR', '')
 docker_build_dir = os.path.abspath(
     os.path.join(build_dir, docker_build_dir),
 )
+docker_file = os.path.join(docker_build_dir, docker_file)
 
 if build_args:
     build_args = build_args.split(',')
@@ -47,6 +48,8 @@ for arg in build_args:
     cmd.extend(('--build-arg', arg))
 
 cmd.append(docker_build_dir)
+
+logging.debug('Building with command %s', cmd)
 
 process = subprocess.Popen(
   cmd, stdout=subprocess.PIPE, env=os.environ.copy(),

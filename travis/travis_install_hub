@@ -3,6 +3,8 @@
 # Copyright 2016 LasLabs Inc.
 # License Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.html).
 
+# Note that this is not run if TESTS=1
+
 set -e
 
 # Build Docker Image
