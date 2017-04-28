@@ -7,18 +7,19 @@ set -e
 
 echo "Running Matrix Functions"
 
-if [ "${LINT_CHECK}" = "1" ]; 
-then
+if [ "${LINT_CHECK}" = "1" ]; then
 
     travis_run_lint
 
-elif [ "${TESTS}" = "1" ]; 
-then
+fi
+
+if [ "${TESTS}" = "1" ]; then
 
     travis_run_test
 
-elif [ "${HUB}" = "1" ];
-then
+fi
+
+if [ "${HUB}" = "1" ]; then
 
     if [ "${TRAVIS_BRANCH}" = "${BRANCH_PROD:=master}" ] \
     && [ "${TRAVIS_PULL_REQUEST}" = "false" ];
