@@ -36,6 +36,9 @@ env:
     # This is a space separated list of arguments to add to the image when
     #   issuing run.
     - RUN_ARGS=""
+    # This is a comma separated list of files (relative to repo root) that
+    #   should be sourced for environment variables.
+    - FILE_ENV=""
     # This is a comma separated list of environment variables to expose to the
     #   docker container. Example:
     #     ``POSTGRES_USER="psql",POSTGRES_PASS="SuperSecureBro"``
