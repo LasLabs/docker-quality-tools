@@ -64,7 +64,7 @@ for link in links:
 
 for env_file in file_env:
     file_path = os.path.join(build_dir_absolute, env_file)
-    cmd.extend(('--env-file', file_path)
+    cmd.extend(('--env-file', file_path))
 
 for env in run_env:
     cmd.extend(('-e', env))
