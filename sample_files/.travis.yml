@@ -16,11 +16,10 @@ env:
     - secure: "$DOCKER_PASS_TOKEN"
     # This is the branch where deploys happen
     - BRANCH_PROD="master"
+    # Use this to change the build context, relative to TRAVIS_BUILD_DIR
+    - DOCKER_CONTEXT="."
     # Use this to change the Dockerfile location, relative to TRAVIS_BUILD_DIR
-    - DOCKERFILE="Dockerfile"
-    # Use this to change the directory that the Dockerfile resides in, relative
-    #   to TRAVIS_BUILD_DIR
-    - DOCKER_DIR = ""
+    - DOCKERFILE="${DOCKER_CONTEXT}/Dockerfile"
     # This is a comma separated list of variables for build args, example:
     #   PYTHON_VERSION=3,PYTHON_PACKAGE=python3
     - BUILD_ARGS=""

@@ -11,21 +11,23 @@ import coloredlogs
 
 from datetime import datetime
 
-coloredlogs.install(level='DEBUG')
+coloredlogs.install(level='INFO')
 logging.basicConfig(format='%(levelname)s: %(message)s',
-                    level=logging.DEBUG)
+                    level=logging.INFO)
 
 build_dir = os.environ.get('TRAVIS_BUILD_DIR', os.path.dirname(__file__))
 docker_repo = os.environ.get('DOCKER_REPO', 'laslabs/docker-test')
 docker_tag = os.environ.get('DOCKER_TAG', 'latest')
 build_args = os.environ.get('BUILD_ARGS', [])
+docker_context = os.environ.get('DOCKER_CONTEXT', '.')
 docker_file = os.environ.get('DOCKERFILE', 'Dockerfile')
 
 docker_build_dir = os.environ.get('DOCKER_DIR', '')
-docker_build_dir = os.path.abspath(
-    os.path.join(build_dir, docker_build_dir),
-)
-docker_file = os.path.join(docker_build_dir, docker_file)
+if docker_build_dir and docker_context == '.':
+    logging.warning('`DOCKER_DIR` is deprecated. Switch to `DOCKER_CONTEXT`.')
+    docker_context = docker_build_dir
+
+docker_file = os.path.join(docker_context, docker_file)
 
 if build_args:
     build_args = build_args.split(',')
@@ -47,7 +49,7 @@ cmd = [
 for arg in build_args:
     cmd.extend(('--build-arg', arg))
 
-cmd.append(docker_build_dir)
+cmd.append(docker_context)
 
 logging.debug('Building with command %s', cmd)
 
