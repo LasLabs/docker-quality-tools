@@ -11,9 +11,9 @@ import coloredlogs
 
 from datetime import datetime
 
-coloredlogs.install(level='DEBUG')
+coloredlogs.install(level='INFO')
 logging.basicConfig(format='%(levelname)s: %(message)s',
-                    level=logging.DEBUG)
+                    level=logging.INFO)
 
 build_dir = os.environ.get('TRAVIS_BUILD_DIR', os.path.dirname(__file__))
 docker_repo = os.environ.get('DOCKER_REPO', 'laslabs/docker-test')
