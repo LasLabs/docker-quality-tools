@@ -18,11 +18,11 @@ build_dir = os.environ.get('TRAVIS_BUILD_DIR', './')
 daemonize = os.environ.get('DAEMONIZE', '1')
 docker_repo = os.environ.get('DOCKER_REPO', 'laslabs/docker-test')
 docker_tag = os.environ.get('DOCKER_TAG', 'latest')
-ports = os.environ.get('PORTS', [])
-links = os.environ.get('LINKS', [])
-run_env = os.environ.get('RUN_ENV', [])
-file_env = os.environ.get('FILE_ENV', [])
-run_args = os.environ.get('RUN_ARGS', [])
+ports = os.environ.get('PORTS', '')
+links = os.environ.get('LINKS', '')
+run_env = os.environ.get('RUN_ENV', '')
+file_env = os.environ.get('FILE_ENV', '')
+run_args = os.environ.get('RUN_ARGS', '')
 
 def read_process(process):
     collected = []
@@ -36,20 +36,11 @@ def read_process(process):
         process.poll()
     return '\n'.join(collected)
 
-if ports:
-    ports = ports.split(',')
-
-if run_env:
-    run_env = run_env.split(',')
-
-if links:
-    links = links.split(',')
-
-if run_args:
-    run_args = run_args.split(' ')
-
-if file_env:
-    file_env = file_env.split(',')
+ports = ports and ports.split(',') or []
+run_env = run_env and run_env.split(',') or []
+links = links and links.split(',') or []
+run_args = run_args and run_args.split(' ') or []
+file_env = file_env and file_env.split(',') or []
 
 build_dir_absolute = os.path.abspath(build_dir)
 test_dir = os.path.join(build_dir_absolute, 'tests')
