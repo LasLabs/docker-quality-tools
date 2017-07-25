@@ -9,9 +9,9 @@ import subprocess
 
 import coloredlogs
 
-coloredlogs.install(level='INFO')
+coloredlogs.install(level='DEBUG')
 logging.basicConfig(format='%(levelname)s: %(message)s',
-                    level=logging.INFO)
+                    level=logging.DEBUG)
 
 build_number = os.environ.get('TRAVIS_BUILD_NUMBER', '0')
 build_dir = os.environ.get('TRAVIS_BUILD_DIR', './')
