@@ -13,11 +13,16 @@ coloredlogs.install(level='DEBUG')
 
 build_dir = os.environ.get('TRAVIS_BUILD_DIR', './')
 dockerfile = os.environ.get('DOCKERFILE', 'Dockerfile')
+docker_context = os.environ.get('DOCKER_CONTEXT', '.')
 lint_ignore = os.environ.get('LINT_IGNORE', [])
 
 docker_build_dir = os.environ.get('DOCKER_DIR', '')
+if docker_build_dir and docker_context == '.':
+    logging.warning('`DOCKER_DIR` is deprecated. Switch to `DOCKER_CONTEXT`.')
+    docker_context = docker_build_dir
+
 docker_build_dir = os.path.join(
-    build_dir, docker_build_dir,
+    docker_context, docker_build_dir,
 )
 
 if lint_ignore:
