@@ -21,15 +21,15 @@ if docker_build_dir and docker_context == '.':
     logging.warning('`DOCKER_DIR` is deprecated. Switch to `DOCKER_CONTEXT`.')
     docker_context = docker_build_dir
 
-docker_build_dir = os.path.join(
-    docker_context, docker_build_dir,
+docker_context = os.path.join(
+    build_dir, docker_context,
 )
 
 if lint_ignore:
     lint_ignore = lint_ignore.split(',')
 
 dockerfile_path = os.path.abspath(
-    os.path.join(docker_build_dir, dockerfile),
+    os.path.join(docker_context, dockerfile),
 )
 
 cmd = ['docker', 'run', '--rm', '-i', 'lukasmartinelli/hadolint',
