@@ -11,9 +11,10 @@ RUN apk add --no-cache --virtual .build-deps \
 # Remove build dependencies
     && apk del .build-deps
 
-# Copy and define entrypoint
-COPY ./docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
+# Copy and define entrypoint + scripts
+COPY ./entrypoint.sh /
+COPY ./entrypoint.d/ /entrypoint.d/
+ENTRYPOINT ["/entrypoint.sh"]
 
 # This typically exposes the service that the container is responsible for.
 CMD ["python"]
