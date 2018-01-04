@@ -1,5 +1,4 @@
 FROM golang:alpine
-MAINTAINER LasLabs Inc <support@laslabs.com>
 
 # Install build dependencies
 # Make sure to use --no-cache.
@@ -22,7 +21,8 @@ CMD ["python"]
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
-LABEL org.label-schema.build-date=$BUILD_DATE \
+LABEL maintainer="LasLabs Inc <support@laslabs.com>"
+      org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name="Example Project" \
       org.label-schema.description="Provides an example Dockerfile." \
       org.label-schema.url="https://laslabs.com/" \
